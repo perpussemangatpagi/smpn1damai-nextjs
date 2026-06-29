@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 
 export async function GET() {
   const token = process.env.GITHUB_PAT;
-  const repo = 'perpussemangatpagi/NAMA_REPO_LU'; // <-- Ganti ini bre!
+  const repo = 'perpussemangatpagi/smpn1damai-nextjs'; // <-- Ganti ini bre!
   
   try {
     const res = await fetch(`https://api.github.com/repos/${repo}/contents/content/berita`, {
