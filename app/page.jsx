@@ -1,9 +1,9 @@
 async function getSettings() {
   const token = process.env.GITHUB_PAT;
-  const repo = 'perpussemangatpagi/NAMA_REPO_LU'; // GANTI JUGA NAMA REPO-NYA
+  const repo = 'perpussemangatpagi/smpn1damai-nextjs'; // GANTI JUGA NAMA REPO-NYA
   const res = await fetch(`https://api.github.com/repos/${repo}/contents/content/settings.json`, {
     headers: { Authorization: `Bearer ${token}` },
-    next: { revalidate: 10 } // Auto-update setiap 10 detik
+    cache: 'no-store' // <--- INI KUNCI BIAR LANGSUNG UPDATE (REAL-TIME)
   });
   
   if (!res.ok) return null;
