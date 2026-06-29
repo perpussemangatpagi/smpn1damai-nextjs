@@ -54,17 +54,18 @@ async function getBeritaLengkap() {
 }
 
 
-// TAMPILAN HALAMAN (JSX)
 export default async function Beranda() {
-  // Panggil fungsinya
   const berita = await getBeritaLengkap();
-  const settings = await getSettings(); // <-- TAMBAHIN INI
+  
+  // INI KABEL COLOKANNYA BRE! Manggil fungsi getSettings yang di atas
+  const settings = await getSettings(); 
 
   return (
     <>
       <div className="hero">
         <h1>Selamat Datang di<br/>SMP Negeri 1 Damai</h1>
-        <p>Membentuk generasi unggul, beradab, dan melek teknologi untuk masa depan gemilang.</p>
+        {/* Teks Deskripsi Profil Dinamis */}
+        <p>{settings?.profil || 'Membentuk generasi unggul dan melek teknologi.'}</p>
       </div>
 
       <div className="container">
@@ -72,17 +73,18 @@ export default async function Beranda() {
         {/* KARTU VISI MISI */}
         <section className="section-card glass">
           <h2 className="section-title">Visi & Misi</h2>
-          <p><strong>Visi:</strong> Mewujudkan peserta didik yang beriman, cerdas, terampil, dan berwawasan lingkungan.</p>
-          <p style={{ marginTop: '10px' }}><strong>Misi:</strong> Menyelenggarakan pembelajaran aktif dan inovatif.</p>
+          
+          {/* TEKSNYA DIGANTI JADI PEMANGGIL VARIABEL */}
+          <p><strong>Visi:</strong> {settings?.visi}</p>
+          <p style={{ marginTop: '10px', whiteSpace: 'pre-wrap' }}><strong>Misi:</strong><br/>{settings?.misi}</p>
         </section>
 
-        {/* KARTU BERITA */}
+        {/* KARTU BERITA (Tetap dibiarkan seperti sebelumnya) */}
         <section className="section-card glass">
           <h2 className="section-title">Berita & Informasi Terbaru</h2>
           
           <div className="news-grid">
             {berita.map((item) => (
-              // Looping berita otomatis dari server
               <div key={item.sha} className="news-card">
                 <img src={item.thumb} alt={item.title} className="news-img" />
                 <div className="news-content">
