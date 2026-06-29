@@ -58,6 +58,7 @@ async function getBeritaLengkap() {
 export default async function Beranda() {
   // Panggil fungsinya
   const berita = await getBeritaLengkap();
+  const settings = await getSettings(); // <-- TAMBAHIN INI
 
   return (
     <>
