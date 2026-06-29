@@ -1,3 +1,15 @@
+async function getSettings() {
+  const token = process.env.GITHUB_PAT;
+  const repo = 'perpussemangatpagi/NAMA_REPO_LU'; // GANTI JUGA NAMA REPO-NYA
+  const res = await fetch(`https://api.github.com/repos/${repo}/contents/content/settings.json`, {
+    headers: { Authorization: `Bearer ${token}` },
+    next: { revalidate: 10 } // Auto-update setiap 10 detik
+  });
+  
+  if (!res.ok) return null;
+  const data = await res.json();
+  return JSON.parse(Buffer.from(data.content, 'base64').toString('utf8'));
+}
 // FUNGSI INI JALAN DI MESIN VERCEL (Nggak akan ketahuan di HP user)
 async function getBeritaLengkap() {
   const token = process.env.GITHUB_PAT;
