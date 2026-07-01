@@ -100,15 +100,15 @@ export default function ClientPage({ berita, settings }) {
   return (
     <>
       <header className="header-container glass">
-        <div className="nav-brand" style={{ display: 'flex', width: '100%', alignItems: 'center' }}>
-            <img src="/logo_sekolah (1).png" alt="Logo SMPN 1 Damai" />
-            {/* 🔥 Teks disingkat & dikunci biar nggak bisa turun ke bawah */}
-            <div className="title" style={{ whiteSpace: 'nowrap', fontSize: '1.15rem' }}>SMPN 1 Damai</div>
-            {/* 🔥 TOMBOL PENCARIAN DI POJOK KANAN */}
-            <button className="search-trigger" onClick={bukaSearch}>
+        <div className="nav-brand" style={{ display: 'flex', width: '100%', alignItems: 'center', gap: '12px' }}>
+            <img src="/logo_sekolah (1).png" alt="Logo SMPN 1 Damai" style={{ margin: 0 }} />
+            
+            <div className="title" style={{ whiteSpace: 'nowrap', fontSize: '1.15rem', margin: 0 }}>SMPN 1 Damai</div>
+            {/* 🔥 Tombol Pencarian dengan jarak proporsional (margin di-reset jadi 0) */}
+            <button className="search-trigger" onClick={bukaSearch} style={{ margin: 0 }}>
                 <i className="fa-solid fa-magnifying-glass"></i> <span>Cari</span>
             </button>
-        </div>
+        </div
         <div className="nav-wrapper">
             <button className="nav-arrow left" style={{ display: showLeftArrow ? 'flex' : 'none' }} onClick={() => scrollNav(-100)}><i className="fa-solid fa-chevron-left"></i></button>
             <nav>
