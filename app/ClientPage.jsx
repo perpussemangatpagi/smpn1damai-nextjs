@@ -67,8 +67,8 @@ export default function ClientPage({ berita, settings }) {
     { tipe: 'Visi & Misi', judul: 'Visi Sekolah', link: '#visimisi', konten: settings?.visi || '' },
     { tipe: 'Visi & Misi', judul: 'Misi Sekolah', link: '#visimisi', konten: settings?.misi || '' },
     { tipe: 'Struktur', judul: 'Struktur Organisasi', link: '#struktur', konten: 'Bagan Kepala Sekolah, Guru, Staf' },
-    { tipe: 'Fasilitas', judul: 'Perpus Semangat Pagi', link: 'https://perpus.smpn1damai.web.id', konten: 'Perpustakaan digital dan e-katalog' },
-    { tipe: 'Fasilitas', judul: 'ExamBro Ujian', link: 'https://exambro.smpn1damai.web.id', konten: 'Aplikasi ujian anti kecurangan' },
+    { tipe: 'Fasilitas', judul: 'Perpus Semangat Pagi', link: 'https://perpus.smpn1damai.web.id', konten: 'Web Perpustakaan dan e-katalog' },
+    { tipe: 'Fasilitas', judul: 'ExamBro Ujian', link: 'https://exambro.smpn1damai.web.id', konten: 'Aplikasi ujian resmi SMP Negeri 1 Damai' },
     { tipe: 'Kontak', judul: 'Alamat Sekolah', link: '#kontak', konten: settings?.alamat || '' },
     { tipe: 'Sosial Media', judul: 'Instagram SMPN 1 Damai', link: `https://instagram.com/${settings?.ig}`, konten: 'Foto dokumentasi kegiatan' },
     { tipe: 'Sosial Media', judul: 'YouTube SMPN 1 Damai', link: settings?.yt || '#kontak', konten: 'Video dokumentasi kegiatan sekolah' }
@@ -102,7 +102,10 @@ export default function ClientPage({ berita, settings }) {
       <header className="header-container glass">
         <div className="nav-brand" style={{ display: 'flex', width: '100%', alignItems: 'center' }}>
             <img src="/logo_sekolah (1).png" alt="Logo SMPN 1 Damai" />
-            <div className="title">SMP Negeri 1 Damai</div>
+            <div className="nav-brand" style={{ display: 'flex', width: '100%', alignItems: 'center' }}>
+            <img src="/logo_sekolah (1).png" alt="Logo SMPN 1 Damai" />
+            {/* 🔥 Teks disingkat & dikunci biar nggak bisa turun ke bawah */}
+            <div className="title" style={{ whiteSpace: 'nowrap', fontSize: '1.15rem' }}>SMPN 1 Damai</div>
             {/* 🔥 TOMBOL PENCARIAN DI POJOK KANAN */}
             <button className="search-trigger" onClick={bukaSearch}>
                 <i className="fa-solid fa-magnifying-glass"></i> <span>Cari</span>
