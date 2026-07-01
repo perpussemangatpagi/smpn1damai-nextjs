@@ -124,8 +124,8 @@ export default function ClientPage({ berita, settings }) {
         <section id="layanan" className="section-card glass">
           <h2 className="section-title">Web Lainnya</h2>
           <div className="layanan-grid">
-            <a href="https://perpus.smpn1damai.web.id" className="layanan-card perpus"><i className="fa-solid fa-book-open-reader"></i><h3>Perpus Semangat Pagi</h3><p>Perpustakaan digital dan e-katalog pintar.</p></a>
-            <a href="https://exambro.smpn1damai.web.id" className="layanan-card exambro"><i className="fa-solid fa-shield-halved"></i><h3>ExamBro</h3><p>Aplikasi ujian resmi anti kecurangan (Android).</p></a>
+            <a href="https://perpus.smpn1damai.web.id" className="layanan-card perpus"><i className="fa-solid fa-book-open-reader"></i><h3>Perpus Semangat Pagi</h3><p>Perpustakaan digital dan e-katalog.</p></a>
+            <a href="https://exambro.smpn1damai.web.id" className="layanan-card exambro"><i className="fa-solid fa-shield-halved"></i><h3>ExamBro</h3><p>Aplikasi ujian resmi SMP Negeri 1 Damai.</p></a>
           </div>
         </section>
 
