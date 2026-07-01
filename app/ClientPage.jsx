@@ -145,15 +145,30 @@ export default function ClientPage({ berita, settings }) {
           <div style={{ marginTop: '15px' }}>
             <strong>Misi:</strong>
             <div style={{ marginTop: '8px' }}>
-              {settings?.misi ? settings.misi.split('\n').map((baris, i) => (
-                <div key={i} style={{ paddingLeft: '22px', textIndent: '-22px', marginBottom: '6px' }}>
-                  {baris}
-                </div>
-              )) : '(Detail misi akan segera diperbarui)'}
+              {settings?.misi ? settings.misi.split('\n').map((baris, i) => {
+                // Mesin pendeteksi angka (Regex)
+                const match = baris.match(/^(\d+\.)\s+(.*)/);
+                
+                if (match) {
+                  // Kalau ini baris list angka, pisahin jadi 2 kolom sejajar
+                  return (
+                    <div key={i} style={{ display: 'flex', gap: '8px', marginBottom: '6px' }}>
+                      <span style={{ minWidth: '18px', fontWeight: 'bold' }}>{match[1]}</span>
+                      <span>{match[2]}</span>
+                    </div>
+                  );
+                }
+                
+                // Kalau ini cuma baris teks biasa (bukan list)
+                return (
+                  <div key={i} style={{ marginBottom: '6px' }}>
+                    {baris}
+                  </div>
+                );
+              }) : '(Detail misi akan segera diperbarui)'}
             </div>
           </div>
         </section>
-
         {/* KARTU 4: STRUKTUR */}
         <section id="struktur" className="section-card glass">
           <h2 className="section-title">Struktur Organisasi</h2>
