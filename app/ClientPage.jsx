@@ -67,14 +67,14 @@ export default function ClientPage({ berita, settings }) {
     { tipe: 'Visi & Misi', judul: 'Visi Sekolah', link: '#visimisi', konten: settings?.visi || '' },
     { tipe: 'Visi & Misi', judul: 'Misi Sekolah', link: '#visimisi', konten: settings?.misi || '' },
     { tipe: 'Struktur', judul: 'Struktur Organisasi', link: '#struktur', konten: 'Bagan Kepala Sekolah, Guru, Staf' },
-    { tipe: 'Fasilitas', judul: 'Perpus Semangat Pagi', link: 'https://perpus.smpn1damai.web.id', konten: 'Web Perpustakaan dan e-katalog' },
-    { tipe: 'Fasilitas', judul: 'ExamBro Ujian', link: 'https://exambro.smpn1damai.web.id', konten: 'Aplikasi ujian resmi SMP Negeri 1 Damai' },
-    { tipe: 'Kontak', judul: 'Alamat Sekolah', link: '#kontak', konten: settings?.alamat || '' },
+    { tipe: 'Fasilitas', judul: 'Perpus Semangat Pagi', link: 'https://perpus.smpn1damai.web.id', konten: 'Perpustakaan digital dan e-katalog' },
+    { tipe: 'Fasilitas', judul: 'ExamBro Ujian', link: 'https://exambro.smpn1damai.web.id', konten: 'Aplikasi ujian anti kecurangan' },
+    { tipe: 'Kontak', judul: 'Alamat Sekolah', link: '#kontak', konten: settings?.alamat || 'Jl. Temenggung Gamas' },
     { tipe: 'Sosial Media', judul: 'Instagram SMPN 1 Damai', link: `https://instagram.com/${settings?.ig}`, konten: 'Foto dokumentasi kegiatan' },
     { tipe: 'Sosial Media', judul: 'YouTube SMPN 1 Damai', link: settings?.yt || '#kontak', konten: 'Video dokumentasi kegiatan sekolah' }
   ];
 
-  // Rumus Filter Pencarian (Cari di judul atau konten)
+  // Rumus Filter Pencarian
   const hasilCari = query.length > 1 ? semuaData.filter(item => 
     item.judul.toLowerCase().includes(query.toLowerCase()) || 
     item.konten.toLowerCase().includes(query.toLowerCase())
@@ -82,15 +82,15 @@ export default function ClientPage({ berita, settings }) {
 
   // Aksi ketika hasil pencarian di klik
   const klikHasil = (item) => {
-    setIsSearchOpen(false); document.body.style.overflow = 'auto'; // Tutup layar search
-    setQuery(''); // Kosongin input
+    setIsSearchOpen(false); document.body.style.overflow = 'auto';
+    setQuery('');
     
     if (item.tipe === 'Berita') {
-      bukaModal(item.link); // Buka pop-up berita
+      bukaModal(item.link);
     } else if (typeof item.link === 'string' && item.link.startsWith('http')) {
-      window.open(item.link, '_blank'); // Buka tab baru buat sosmed/perpus
+      window.open(item.link, '_blank');
     } else {
-      window.location.href = item.link; // Scroll ke bagian Visi/Misi/Kontak
+      window.location.href = item.link;
     }
   };
 
@@ -101,8 +101,6 @@ export default function ClientPage({ berita, settings }) {
     <>
       <header className="header-container glass">
         <div className="nav-brand" style={{ display: 'flex', width: '100%', alignItems: 'center' }}>
-            <img src="/logo_sekolah (1).png" alt="Logo SMPN 1 Damai" />
-            <div className="nav-brand" style={{ display: 'flex', width: '100%', alignItems: 'center' }}>
             <img src="/logo_sekolah (1).png" alt="Logo SMPN 1 Damai" />
             {/* 🔥 Teks disingkat & dikunci biar nggak bisa turun ke bawah */}
             <div className="title" style={{ whiteSpace: 'nowrap', fontSize: '1.15rem' }}>SMPN 1 Damai</div>
@@ -197,11 +195,12 @@ export default function ClientPage({ berita, settings }) {
         <section id="layanan" className="section-card glass">
           <h2 className="section-title">Web Lainnya</h2>
           <div className="layanan-grid">
-            <a href="https://perpus.smpn1damai.web.id" className="layanan-card perpus"><i className="fa-solid fa-book-open-reader"></i><h3>Perpus Semangat Pagi</h3><p>Web Perpustakaan dan e-katalog.</p></a>
-            <a href="https://exambro.smpn1damai.web.id" className="layanan-card exambro"><i className="fa-solid fa-shield-halved"></i><h3>ExamBro</h3><p>Aplikasi ujian resmi SMP Negeri 1 Damai.</p></a>
+            <a href="https://perpus.smpn1damai.web.id" className="layanan-card perpus"><i className="fa-solid fa-book-open-reader"></i><h3>Perpus Semangat Pagi</h3><p>Perpustakaan digital dan e-katalog pintar.</p></a>
+            <a href="https://exambro.smpn1damai.web.id" className="layanan-card exambro"><i className="fa-solid fa-shield-halved"></i><h3>ExamBro</h3><p>Aplikasi ujian resmi anti kecurangan (Android).</p></a>
           </div>
         </section>
 
+        {/* 🔥 KARTU KONTAK */}
         <section id="kontak" className="section-card glass" style={{ marginBottom: '1rem' }}>
           <h2 className="section-title">Hubungi Kami</h2>
           <div className="kontak-wrapper">
@@ -233,12 +232,12 @@ export default function ClientPage({ berita, settings }) {
         </section>
       </div>
 
-      <footer>© 2026 | Admin Web : Nur Alfi Syahri, S.P.</footer>
+      <footer>&copy; 2026 | Admin Web : Nur Alfi Syahri, S.P.</footer>
 
       {activeModal && (
         <div id="modal-berita-next" onClick={tutupModal}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <div className="close-btn" onClick={tutupModal}>×</div>
+            <div className="close-btn" onClick={tutupModal}>&times;</div>
             <img src={activeModal.thumb} alt={activeModal.title} className="modal-img" />
             <div className="modal-body">
               <h2>{activeModal.title}</h2>
