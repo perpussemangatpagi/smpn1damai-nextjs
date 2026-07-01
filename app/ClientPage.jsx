@@ -174,7 +174,8 @@ export default function ClientPage({ berita, settings }) {
                 <span>{activeModal.tanggalCantik} | Oleh: {activeModal.author}</span>
                 <button onClick={bagikanBerita} style={{background:'#10b981', color:'white', border:'none', padding:'8px 15px', borderRadius:'12px', fontWeight:'bold', cursor:'pointer'}}><i className="fa-solid fa-share-nodes"></i> Bagikan</button>
               </div>
-              <div className="text-content" dangerouslySetInnerHTML={{ __html: activeModal.body.replace(/!\[(.*?)\]\((.*?)\)/g, '<img src="$2" alt="$1" style="width: 100%; border-radius: 12px; margin: 15px 0; display: block;" />').replace(/\n/g, '<br>') }} />
+                            <div className="text-content" dangerouslySetInnerHTML={{ __html: activeModal.body.replace(/\/content\/gambar\//g, 'https://raw.githubusercontent.com/perpussemangatpagi/smpn1damai-nextjs/main/content/gambar/').replace(/!\[(.*?)\]\((.*?)\)/g, '<img src="$2" alt="$1" style="width: 100%; border-radius: 12px; margin: 15px 0; display: block;" />').replace(/\n/g, '<br>') }} />
+
             </div>
           </div>
         </div>
