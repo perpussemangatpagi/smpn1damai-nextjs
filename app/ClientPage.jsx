@@ -4,30 +4,47 @@ import { useSearchParams, useRouter } from 'next/navigation';
 
 export default function ClientPage({ berita, settings }) {
   const [activeModal, setActiveModal] = useState(null);
+  
+  // State buat ngatur panah kiri kanan
+  const [showLeftArrow, setShowLeftArrow] = useState(false);
+  const [showRightArrow, setShowRightArrow] = useState(true);
+  
   const navListRef = useRef(null);
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  // Efek Otomatis deteksi kalau orang masuk lewat link share (?berita=...)
+  // 1. Deteksi URL param untuk modal pas web dibuka (Fitur Share Link)
   useEffect(() => {
     const beritaParam = searchParams.get('berita');
-    if (beritaParam) {
+    if (beritaParam && berita) {
       const idx = berita.findIndex(b => b.filename === beritaParam);
-      if (idx !== -1) setActiveModal(berita[idx]);
+      if (idx !== -1) {
+          setActiveModal(berita[idx]);
+          document.body.style.overflow = 'hidden';
+      }
     }
   }, [searchParams, berita]);
 
-  const bukaModal = (item) => {
-    setActiveModal(item);
-    router.push(`?berita=${item.filename}`, { scroll: false });
-    document.body.style.overflow = 'hidden';
+  // 2. Logika Panah Navbar (Hilang/Timbul Otomatis)
+  const cekPanah = () => {
+    if (navListRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = navListRef.current;
+      setShowLeftArrow(scrollLeft > 5);
+      setShowRightArrow(scrollWidth - clientWidth - scrollLeft > 5);
+    }
   };
 
-  const tutupModal = () => {
-    setActiveModal(null);
-    router.push('/', { scroll: false });
-    document.body.style.overflow = 'auto';
-  };
+  useEffect(() => {
+    cekPanah(); // Cek pas pertama kali load
+    const navEl = navListRef.current;
+    if (navEl) navEl.addEventListener('scroll', cekPanah);
+    window.addEventListener('resize', cekPanah);
+    
+    return () => {
+      if (navEl) navEl.removeEventListener('scroll', cekPanah);
+      window.removeEventListener('resize', cekPanah);
+    };
+  }, []);
 
   const scrollNav = (jarak) => {
     if (navListRef.current) {
@@ -35,16 +52,38 @@ export default function ClientPage({ berita, settings }) {
     }
   };
 
+  const bukaModal = (item) => {
+    setActiveModal(item);
+    router.push(`?berita=${item.filename}`, { scroll: false });
+    document.body.style.overflow = 'hidden';
+  };
+
+  const tutupModal = (e) => {
+    // Cuma nutup kalau klik background gelap atau klik tombol X
+    if(e.target.id === 'modal-berita-next' || e.target.className === 'close-btn') {
+        setActiveModal(null);
+        router.push('/', { scroll: false });
+        document.body.style.overflow = 'auto';
+    }
+  };
+
   return (
     <>
-      {/* NAVBAR / HEADER */}
+      {/* NAVBAR / HEADER - Udah bener pake className semua */}
       <header className="header-container glass">
-        <div class="nav-brand">
+        <div className="nav-brand">
             <img src="/logo_sekolah (1).png" alt="Logo SMPN 1 Damai" />
-            <div class="title">SMP Negeri 1 Damai</div>
+            <div className="title">SMP Negeri 1 Damai</div>
         </div>
-        <div class="nav-wrapper">
-            <button class="nav-arrow left" style={{display: 'flex'}} onclick={() => scrollNav(-100)}><i class="fa-solid fa-chevron-left"></i></button>
+        <div className="nav-wrapper">
+            <button 
+                className="nav-arrow left" 
+                style={{ display: showLeftArrow ? 'flex' : 'none' }} 
+                onClick={() => scrollNav(-100)}
+            >
+                <i className="fa-solid fa-chevron-left"></i>
+            </button>
+            
             <nav>
                 <ul ref={navListRef}>
                     <li><a href="#beranda">Beranda</a></li>
@@ -55,7 +94,14 @@ export default function ClientPage({ berita, settings }) {
                     <li><a href="#kontak">Kontak</a></li>
                 </ul>
             </nav>
-            <button class="nav-arrow right" style={{display: 'flex'}} onclick={() => scrollNav(100)}><i class="fa-solid fa-chevron-right"></i></button>
+            
+            <button 
+                className="nav-arrow right" 
+                style={{ display: showRightArrow ? 'flex' : 'none' }} 
+                onClick={() => scrollNav(100)}
+            >
+                <i className="fa-solid fa-chevron-right"></i>
+            </button>
         </div>
       </header>
 
