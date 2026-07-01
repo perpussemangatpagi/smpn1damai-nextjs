@@ -124,18 +124,17 @@ export default function ClientPage({ berita, settings }) {
         <section id="layanan" className="section-card glass">
           <h2 className="section-title">Web Lainnya</h2>
           <div className="layanan-grid">
-            <a href="https://perpus.smpn1damai.web.id" className="layanan-card perpus"><i className="fa-solid fa-book-open-reader"></i><h3>Perpus Semangat Pagi</h3><p>Perpustakaan digital dan e-katalog.</p></a>
+            <a href="https://perpus.smpn1damai.web.id" className="layanan-card perpus"><i className="fa-solid fa-book-open-reader"></i><h3>Perpus Semangat Pagi</h3><p>Perpustakaan digital dan e-katalog pintar.</p></a>
             <a href="https://exambro.smpn1damai.web.id" className="layanan-card exambro"><i className="fa-solid fa-shield-halved"></i><h3>ExamBro</h3><p>Aplikasi ujian resmi anti kecurangan (Android).</p></a>
           </div>
         </section>
 
-                {/* 🔥 KARTU KONTAK (Update Maps, IG, FB, YT) */}
+        {/* 🔥 KARTU KONTAK (Update Maps Koordinat, IG, FB, YT) */}
         <section id="kontak" className="section-card glass" style={{ marginBottom: '1rem' }}>
           <h2 className="section-title">Hubungi Kami</h2>
           <div className="kontak-wrapper">
             <div className="kontak-item">
               <i className="fa-solid fa-location-dot"></i><p>Alamat</p>
-              {/* Link otomatis nembak ke koordinat akurat */}
               <a href="https://maps.app.goo.gl/AwZjhDuKuMgAdm3C8?g_st=ac" target="_blank" rel="noopener noreferrer">{settings?.alamat || 'Jl. Temenggung Gamas'}</a>
             </div>
             <div className="kontak-item">
@@ -155,12 +154,12 @@ export default function ClientPage({ berita, settings }) {
             {settings?.yt && (
               <div className="kontak-item">
                 <i className="fa-brands fa-youtube" style={{color:'#ef4444'}}></i><p>YouTube</p>
-                {/* Teks YouTube diganti jadi nama sekolah */}
                 <a href={settings.yt} target="_blank" rel="noopener noreferrer">SMP Negeri 1 Damai</a>
               </div>
             )}
           </div>
         </section>
+      </div>
 
       <footer>&copy; 2026 | Admin Web : Nur Alfi Syahri, S.P.</footer>
 
@@ -173,7 +172,6 @@ export default function ClientPage({ berita, settings }) {
               <h2>{activeModal.title}</h2>
               <div className="meta" style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
                 <span>{activeModal.tanggalCantik} | Oleh: {activeModal.author}</span>
-                {/* 🔥 TOMBOL SHARE DI DALAM BERITA */}
                 <button onClick={bagikanBerita} style={{background:'#10b981', color:'white', border:'none', padding:'8px 15px', borderRadius:'12px', fontWeight:'bold', cursor:'pointer'}}><i className="fa-solid fa-share-nodes"></i> Bagikan</button>
               </div>
               <div className="text-content" dangerouslySetInnerHTML={{ __html: activeModal.body.replace(/\n/g, '<br>') }} />
