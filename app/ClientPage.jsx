@@ -174,9 +174,6 @@ export default function ClientPage({ berita, settings }) {
                 <span>{activeModal.tanggalCantik} | Oleh: {activeModal.author}</span>
                 <button onClick={bagikanBerita} style={{background:'#10b981', color:'white', border:'none', padding:'8px 15px', borderRadius:'12px', fontWeight:'bold', cursor:'pointer'}}><i className="fa-solid fa-share-nodes"></i> Bagikan</button>
 <div className="text-content" dangerouslySetInnerHTML={{ __html: activeModal.body.replace(/!\[(.*?)\]\((.*?)\)/g, '<img src="$2" alt="$1" />').replace(/\n/g, '<br>') }} />
-            </div>
-          </div>
-        </div>
       )}
     </>
   );
