@@ -141,7 +141,17 @@ export default function ClientPage({ berita, settings }) {
         <section id="visimisi" className="section-card glass">
           <h2 className="section-title">Visi & Misi</h2>
           <p><strong>Visi:</strong> {settings?.visi || 'Mewujudkan peserta didik yang beriman, cerdas, terampil, dan berwawasan lingkungan.'}</p>
-          <p style={{ marginTop: '10px', whiteSpace: 'pre-wrap' }}><strong>Misi:</strong><br />{settings?.misi || '(Detail misi akan segera diperbarui)'}</p>
+          
+          <div style={{ marginTop: '15px' }}>
+            <strong>Misi:</strong>
+            <div style={{ marginTop: '8px' }}>
+              {settings?.misi ? settings.misi.split('\n').map((baris, i) => (
+                <div key={i} style={{ paddingLeft: '22px', textIndent: '-22px', marginBottom: '6px' }}>
+                  {baris}
+                </div>
+              )) : '(Detail misi akan segera diperbarui)'}
+            </div>
+          </div>
         </section>
 
         {/* KARTU 4: STRUKTUR */}
