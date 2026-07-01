@@ -18,11 +18,11 @@ body {
     box-shadow: 0 10px 30px rgba(0,0,0,0.05) !important;
 }
 
-@supports (backdrop-filter: blur(25px)) or (-webkit-backdrop-filter: blur(25px)) {
+@supports (backdrop-filter: blur(14px)) or (-webkit-backdrop-filter: blur(14px)) {
     .glass {
         background: rgba(255, 255, 255, 0.45) !important; 
-        -webkit-backdrop-filter: blur(25px) saturate(200%) !important;
-        backdrop-filter: blur(25px) saturate(200%) !important;
+        -webkit-backdrop-filter: blur(14px) saturate(140%) !important;
+        backdrop-filter: blur(14px) saturate(140%) !important;
         border-top: 1.5px solid rgba(255, 255, 255, 0.9) !important;
         border-left: 1.5px solid rgba(255, 255, 255, 0.9) !important;
         border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
