@@ -1,3 +1,6 @@
+import './globals.css'
+
+// Di sinilah KTP Google lu sekarang ditanam secara otomatis sama Next.js!
 export const metadata = {
   title: 'SMPN 1 Damai | Official Website',
   description: 'Membentuk generasi unggul, beradab, dan melek teknologi untuk masa depan gemilang.',
@@ -18,12 +21,6 @@ export const metadata = {
     type: 'website',
   },
 };
-import './globals.css'
-
-// Di sinilah KTP Google lu sekarang ditanam secara otomatis sama Next.js!
-export const metadata = {
-  title: 'SMP Negeri 1 Damai',
-  description: 'Membentuk generasi unggul, beradab, dan melek teknologi untuk masa depan gemilang.',
   verification: {
     google: '4S6p9Q42VifIpP5fYTyuVVhnG-7prq52Ibtf1cdEObY',
   },
