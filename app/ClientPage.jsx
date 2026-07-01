@@ -170,10 +170,14 @@ export default function ClientPage({ berita, settings }) {
             <img src={activeModal.thumb} alt={activeModal.title} className="modal-img" />
             <div className="modal-body">
               <h2>{activeModal.title}</h2>
-              <div className="meta" style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
+                            <div className="meta" style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
                 <span>{activeModal.tanggalCantik} | Oleh: {activeModal.author}</span>
                 <button onClick={bagikanBerita} style={{background:'#10b981', color:'white', border:'none', padding:'8px 15px', borderRadius:'12px', fontWeight:'bold', cursor:'pointer'}}><i className="fa-solid fa-share-nodes"></i> Bagikan</button>
-<div className="text-content" dangerouslySetInnerHTML={{ __html: activeModal.body.replace(/!\[(.*?)\]\((.*?)\)/g, '<img src="$2" alt="$1" />').replace(/\n/g, '<br>') }} />
+              </div>
+              <div className="text-content" dangerouslySetInnerHTML={{ __html: activeModal.body.replace(/!\[(.*?)\]\((.*?)\)/g, '<img src="$2" alt="$1" style="width: 100%; border-radius: 12px; margin: 15px 0; display: block;" />').replace(/\n/g, '<br>') }} />
+            </div>
+          </div>
+        </div>
       )}
     </>
   );
