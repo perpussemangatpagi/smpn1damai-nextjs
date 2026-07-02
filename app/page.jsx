@@ -2,9 +2,9 @@
 import ClientPage from './ClientPage';
 
 async function getBeritaLengkap() {
-  const token = process.env.GITHUB_PAT;
-  const repo = 'perpussemangatpagi/smpn1damai-nextjs'; // <-- GANTI NAMA REPO NEXTJS LU BRE!
-  const rawUrl = `https://raw.githubusercontent.com/${repo}/main`;
+  // Menggunakan token yang ada di Vercel env lu bre
+  const token = process.env.GITHUB_TOKEN || process.env.GITHUB_PAT;
+  const repo = 'perpussemangatpagi/smpn1damai-nextjs'; 
 
   const res = await fetch(`https://api.github.com/repos/${repo}/contents/content/berita`, {
     headers: { Authorization: `Bearer ${token}` },
@@ -13,7 +13,9 @@ async function getBeritaLengkap() {
   
   if (!res.ok) return [];
   const files = await res.json();
-  const fileBerita = files.filter(f => f.name.endsWith('.md')).reverse().slice(0, 6);
+  
+  // 🔥 1. GANTI FILTER: Sekarang nyari file .json racikan CMS baru
+  const fileBerita = files.filter(f => f.name.endsWith('.json')).reverse().slice(0, 6);
 
   const detailPromises = fileBerita.map(async (file) => {
     const dRes = await fetch(`https://api.github.com/repos/${repo}/contents/${file.path}`, {
@@ -22,31 +24,33 @@ async function getBeritaLengkap() {
     const dData = await dRes.json();
     const teksMentah = Buffer.from(dData.content, 'base64').toString('utf8');
 
-    const title = teksMentah.match(/title:\s*"(.*?)"/)?.[1] || 'Tanpa Judul';
-    const dateRaw = teksMentah.match(/date:\s*"(.*?)"/)?.[1] || '';
-    const author = teksMentah.match(/author:\s*"(.*?)"/)?.[1] || 'Humas';
-    let thumb = teksMentah.match(/thumbnail:\s*"(.*?)"/)?.[1] || '';
-    
-    if (thumb && thumb.startsWith('/')) { thumb = rawUrl + thumb; } 
-    else if (!thumb) { thumb = 'https://via.placeholder.com/400x200?text=Tidak+Ada+Foto'; }
+    try {
+      // 🔥 2. PARSE OTOMATIS: Gak perlu ribet pakai regex lagi, langsung kunyah objek JSON
+      const dataJson = JSON.parse(teksMentah);
 
-    const tglObj = new Date(dateRaw);
-    const tanggalCantik = isNaN(tglObj) ? '-' : tglObj.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
-    let body = teksMentah.replace(/---[\s\S]*?---/, '').trim();
-
-    // Bikin snippet pratinjau bersih di server
-    let snippetBersih = body.replace(/!\[.*?\]\(.*?\)/g, ''); 
-    snippetBersih = snippetBersih.replace(/[#*`_>!\[\]()]/g, '').substring(0, 110) + '...';
-
-    return { filename: file.name.replace('.md', ''), title, thumb, tanggalCantik, author, body, snippetBersih };
+      return {
+        filename: file.name.replace('.json', ''),
+        title: dataJson.title || 'Tanpa Judul',
+        thumb: dataJson.thumb || 'https://raw.githubusercontent.com/perpussemangatpagi/smpn1damai-nextjs/main/public/og-logo.png',
+        images: dataJson.images || [], // Ambil data array multi-foto
+        tanggalCantik: dataJson.tanggalCantik || '-',
+        author: dataJson.author || 'Admin Sekolah',
+        body: dataJson.body || '',
+        snippetBersih: dataJson.snippetBersih || ''
+      };
+    } catch (err) {
+      console.error("Gagal parse JSON berita:", file.name);
+      return null;
+    }
   });
 
-  return Promise.all(detailPromises);
+  const hasil = await Promise.all(detailPromises);
+  return hasil.filter(item => item !== null); // Buang data jikalau ada yang error
 }
 
 async function getSettings() {
-  const token = process.env.GITHUB_PAT;
-  const repo = 'perpussemangatpagi/smpn1damai-nextjs'; // <-- GANTI JUGA DI SINI BRE!
+  const token = process.env.GITHUB_TOKEN || process.env.GITHUB_PAT;
+  const repo = 'perpussemangatpagi/smpn1damai-nextjs'; 
   const res = await fetch(`https://api.github.com/repos/${repo}/contents/content/settings.json`, {
     headers: { Authorization: `Bearer ${token}` },
     cache: 'no-store'
