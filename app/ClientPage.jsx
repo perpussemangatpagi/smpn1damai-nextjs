@@ -238,28 +238,13 @@ export default function ClientPage({ berita, settings }) {
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="close-btn" onClick={tutupModal}>×</div>
             
-            {/* 🔥 INI BAGIAN SLIDER GALLERY-NYA BRE 🔥 */}
-            <div className="modal-gallery" style={{ display: 'flex', overflowX: 'auto', gap: '10px', scrollSnapType: 'x mandatory', paddingBottom: '10px' }}>
-              {activeModal.images && activeModal.images.length > 0 ? (
-                activeModal.images.map((imgUrl, index) => (
-                  <img 
-                    key={index} 
-                    src={imgUrl} 
-                    alt={`Foto ${index + 1} - ${activeModal.title}`} 
-                    className="modal-img" 
-                    style={{ flex: '0 0 100%', scrollSnapAlign: 'start', objectFit: 'cover', borderRadius: '12px' }} 
-                  />
-                ))
-              ) : (
-                <img 
-                  src={activeModal.thumb} 
-                  alt={activeModal.title} 
-                  className="modal-img" 
-                  style={{ width: '100%', borderRadius: '12px', objectFit: 'cover' }} 
-                />
-              )}
-            </div>
-            {/* ======================================= */}
+            {/* 🔥 1. FOTO PERTAMA NANGKRING DI ATAS (THUMBNAIL SEMENTARA) */}
+            <img 
+              src={activeModal.images && activeModal.images.length > 0 ? activeModal.images[0] : activeModal.thumb} 
+              alt={activeModal.title} 
+              className="modal-img" 
+              style={{ width: '100%', borderRadius: '12px', objectFit: 'cover' }} 
+            />
 
             <div className="modal-body">
               <h2>{activeModal.title}</h2>
@@ -267,7 +252,28 @@ export default function ClientPage({ berita, settings }) {
                 <span>{activeModal.tanggalCantik} | Oleh: {activeModal.author}</span>
                 <button onClick={bagikanBerita} style={{background:'#10b981', color:'white', border:'none', padding:'8px 15px', borderRadius:'12px', fontWeight:'bold', cursor:'pointer'}}><i className="fa-solid fa-share-nodes"></i> Bagikan</button>
               </div>
+              
+              {/* ISI TEKS BERITA */}
               <div className="text-content" dangerouslySetInnerHTML={{ __html: activeModal.body.replace(/\/content\/gambar\//g, 'https://raw.githubusercontent.com/perpussemangatpagi/smpn1damai-nextjs/main/content/gambar/').replace(/!\[(.*?)\]\((.*?)\)/g, '<img src="$2" alt="$1" style="width: 100%; border-radius: 12px; margin: 15px 0; display: block;" />').replace(/\n/g, '<br>') }} />
+              
+              {/* 🔥 2. SISA FOTO (LAMPIRAN) MASUK DI SINI BRE */}
+              {activeModal.images && activeModal.images.length > 1 && (
+                <div className="lampiran-foto" style={{ marginTop: '25px', display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                  <h4 style={{ margin: '0 0 10px 0', borderBottom: '2px solid #e2e8f0', paddingBottom: '8px', color: '#0ea5e9' }}>
+                    Lampiran Dokumentasi:
+                  </h4>
+                  {/* .slice(1) fungsinya ngebuang foto urutan pertama, jadi sisa urutan ke-2 dst. */}
+                  {activeModal.images.slice(1).map((imgUrl, index) => (
+                    <img 
+                      key={index} 
+                      src={imgUrl} 
+                      alt={`Lampiran Dokumentasi ${index + 2} - ${activeModal.title}`} 
+                      style={{ width: '100%', borderRadius: '12px', objectFit: 'cover', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }} 
+                    />
+                  ))}
+                </div>
+              )}
+
             </div>
           </div>
         </div>
