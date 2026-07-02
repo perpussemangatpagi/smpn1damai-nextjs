@@ -13,9 +13,31 @@ export default function AdminPage() {
   const [isEdit, setIsEdit] = useState(false);
   const [oldFilename, setOldFilename] = useState('');
   const [title, setTitle] = useState('');
-  const [thumb, setThumb] = useState(''); // Nyimpen foto lama buat mode edit
-  const [files, setFiles] = useState([]); // 🔥 State baru buat nampung file upload
+  const [thumb, setThumb] = useState(''); 
+  const [files, setFiles] = useState([]); 
   const [body, setBody] = useState('');
+  const [date, setDate] = useState(''); // 🔥 State khusus penampung tanggal
+
+  // Rumus narik tanggal lokal HP Mandor (Biar nggak ngikut jam server Vercel)
+  const getTanggalHariIni = () => {
+    const now = new Date();
+    const offset = now.getTimezoneOffset() * 60000;
+    return new Date(now.getTime() - offset).toISOString().split('T')[0];
+  };
+
+  // Rumus ngubah format "2 Juli 2026" jadi "2026-07-02" pas mode Edit
+  const parseTanggalDariGithub = (tglStr) => {
+    if (!tglStr) return getTanggalHariIni();
+    const bulanIndo = { 'Januari': '01', 'Februari': '02', 'Maret': '03', 'April': '04', 'Mei': '05', 'Juni': '06', 'Juli': '07', 'Agustus': '08', 'September': '09', 'Oktober': '10', 'November': '11', 'Desember': '12' };
+    const parts = tglStr.split(' ');
+    if (parts.length === 3) {
+      const dd = parts[0].padStart(2, '0');
+      const mm = bulanIndo[parts[1]] || '01';
+      const yyyy = parts[2];
+      return `${yyyy}-${mm}-${dd}`;
+    }
+    return getTanggalHariIni();
+  };
 
   const fetchBerita = async () => {
     try {
@@ -47,19 +69,24 @@ export default function AdminPage() {
   };
 
   const bersihkanForm = () => {
-    setFormOpen(false); setIsEdit(false); setOldFilename(''); setTitle(''); setThumb(''); setBody(''); setFiles([]);
+    setFormOpen(false); setIsEdit(false); setOldFilename(''); setTitle(''); setThumb(''); setBody(''); setFiles([]); setDate('');
   };
 
-  const handleBukaTambah = () => { bersihkanForm(); setFormOpen(true); };
+  const handleBukaTambah = () => { 
+    bersihkanForm(); 
+    setDate(getTanggalHariIni()); // Set kalender ke hari ini
+    setFormOpen(true); 
+  };
 
   const handleBukaEdit = (b) => {
     bersihkanForm();
     setIsEdit(true); setOldFilename(b.filename); setTitle(b.title);
     setThumb(b.images ? b.images.join(', ') : b.thumb); 
-    setBody(b.body); setFormOpen(true);
+    setBody(b.body); 
+    setDate(parseTanggalDariGithub(b.tanggalCantik)); // Masukin tanggal lama ke kalender
+    setFormOpen(true);
   };
 
-  // 🔥 JURUS KOMPRESOR FOTO OTOMATIS DI HP MANDOR
   const compressImage = (file) => {
     return new Promise((resolve) => {
       const reader = new FileReader();
@@ -69,15 +96,13 @@ export default function AdminPage() {
         img.src = event.target.result;
         img.onload = () => {
           const canvas = document.createElement('canvas');
-          const MAX_WIDTH = 800; // Ukuran standar web
-          let scaleSize = MAX_WIDTH / img.width;
-          if (scaleSize > 1) scaleSize = 1; // Jangan perbesar kalau fotonya udah kecil
+          let scaleSize = 800 / img.width;
+          if (scaleSize > 1) scaleSize = 1;
           canvas.width = img.width * scaleSize;
           canvas.height = img.height * scaleSize;
           const ctx = canvas.getContext('2d');
           ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-          const base64 = canvas.toDataURL('image/jpeg', 0.7); // Kualitas 70%
-          resolve({ name: file.name, data: base64.split(',')[1] });
+          resolve({ name: file.name, data: canvas.toDataURL('image/jpeg', 0.7).split(',')[1] });
         };
       };
     });
@@ -88,19 +113,23 @@ export default function AdminPage() {
     setLoading(true);
 
     try {
-      // Proses kompres semua foto yang dipilih
       const compressedFiles = await Promise.all(files.map(compressImage));
-      
       const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
-      const filename = isEdit ? oldFilename : `${new Date().toISOString().split('T')[0]}-${slug}`;
+      const filename = isEdit ? oldFilename : `${date}-${slug}`;
+
+      // 🔥 Racik tanggal dari inputan jadi Format Indonesia (Misal: 3 Juli 2026)
+      const [y, m, d] = date.split('-');
+      const namaBulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+      const tanggalCantik = `${parseInt(d, 10)} ${namaBulan[parseInt(m, 10) - 1]} ${y}`;
 
       const res = await fetch('/api/admin/berita', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
             username, password, filename, title, body, isEdit, 
-            newImages: compressedFiles, // Kirim foto yang udah dikompres
-            oldThumb: thumb // Kirim foto lama buat jaga-jaga kalau gak upload foto baru
+            newImages: compressedFiles, 
+            oldThumb: thumb,
+            tanggalCantik // Kirim tanggal yg udah diformat ke server
         })
       });
       const hasil = await res.json();
@@ -124,9 +153,7 @@ export default function AdminPage() {
 
   return (
     <div style={{ padding: '20px', fontFamily: 'sans-serif', background: 'linear-gradient(135deg, #e0f2fe 0%, #f3e8ff 100%)', minHeight: '100vh', color: '#1e293b' }}>
-      {pesan.teks && (
-        <div style={{ position: 'fixed', top: '20px', right: '20px', left: '20px', padding: '15px', borderRadius: '15px', color: 'white', fontWeight: 'bold', textAlign: 'center', zIndex: 10000, background: pesan.tipe === 'sukses' ? '#10b981' : '#ef4444', boxShadow: '0 10px 25px rgba(0,0,0,0.1)' }}>{pesan.teks}</div>
-      )}
+      {pesan.teks && <div style={{ position: 'fixed', top: '20px', right: '20px', left: '20px', padding: '15px', borderRadius: '15px', color: 'white', fontWeight: 'bold', textAlign: 'center', zIndex: 10000, background: pesan.tipe === 'sukses' ? '#10b981' : '#ef4444', boxShadow: '0 10px 25px rgba(0,0,0,0.1)' }}>{pesan.teks}</div>}
 
       {!isLoggedIn ? (
         <div style={{ maxWidth: '400px', margin: '10vh auto', background: 'rgba(255,255,255,0.7)', backdropFilter: 'blur(10px)', padding: '30px', borderRadius: '24px', textAlign: 'center' }}>
@@ -149,14 +176,20 @@ export default function AdminPage() {
             <div style={{ background: 'white', padding: '25px', borderRadius: '24px', boxShadow: '0 20px 40px rgba(0,0,0,0.05)', marginBottom: '30px' }}>
               <h2 style={{ marginTop: 0, marginBottom: '20px', color: '#0ea5e9' }}>{isEdit ? '📝 Edit Berita' : '📣 Tulis Berita Baru'}</h2>
               <form onSubmit={handleSimpanBerita} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                
+                {/* 🔥 INPUTAN TANGGAL DI SINI BRE */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                  <label style={{ fontWeight: 'bold', fontSize: '0.9rem' }}>Tanggal Berita Terbit</label>
+                  <input type="date" value={date} onChange={(e) => setDate(e.target.value)} style={{ padding: '12px', borderRadius: '12px', border: '1px solid #cbd5e1' }} required />
+                </div>
+
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
                   <label style={{ fontWeight: 'bold', fontSize: '0.9rem' }}>Judul Berita</label>
                   <input type="text" placeholder="Contoh: Siswa Juara 1..." value={title} onChange={(e) => setTitle(e.target.value)} style={{ padding: '12px', borderRadius: '12px', border: '1px solid #cbd5e1' }} required />
                 </div>
 
-                {/* 🔥 INI DIA TOMBOL UPLOAD ASLI DARI HP */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
-                  <label style={{ fontWeight: 'bold', fontSize: '0.9rem' }}>Upload Foto Berita (Bisa Pilih Banyak)</label>
+                  <label style={{ fontWeight: 'bold', fontSize: '0.9rem' }}>Upload Foto Berita (Pilih Banyak)</label>
                   <input type="file" multiple accept="image/*" onChange={(e) => setFiles(Array.from(e.target.files))} style={{ padding: '10px', borderRadius: '12px', border: '1px solid #cbd5e1', background: '#f8fafc' }} />
                   {isEdit && <small style={{ color: '#ef4444', fontStyle: 'italic' }}>*Kosongkan jika tidak ingin mengubah foto yang sudah ada.</small>}
                 </div>
