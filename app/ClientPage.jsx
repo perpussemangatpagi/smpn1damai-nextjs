@@ -94,7 +94,7 @@ export default function ClientPage({ berita, settings }) {
 
   return (
     <>
-      {/* 🔥 INI DIA NAVBAR YANG UDAH DIKASIH OBAT PELANGSING (Padding & Height dipangkas) */}
+      {/* NAVBAR LANGSING */}
       <header className="header-container glass" style={{ padding: '12px 16px', gap: '6px', borderRadius: '24px' }}>
         <div className="nav-brand" style={{ display: 'flex', width: '100%', alignItems: 'center', gap: '10px' }}>
             <img src="/logo_sekolah (1).png" alt="Logo SMPN 1 Damai" style={{ margin: 0, height: '36px', width: 'auto' }} />
@@ -119,6 +119,7 @@ export default function ClientPage({ berita, settings }) {
         </div>
       </header>
 
+      {/* SEARCH MODAL */}
       {isSearchOpen && (
         <div className="search-modal">
             <div className="search-header-box">
@@ -147,12 +148,18 @@ export default function ClientPage({ berita, settings }) {
       </div>
 
       <div className="container">
+        {/* 🔥 LOGIC BACA FOTO PERTAMA DARI ARRAY */}
         <section id="beranda" className="section-card glass">
           <h2 className="section-title">Berita & Informasi Terbaru</h2>
           <div className="news-grid">
             {berita.map((item) => (
               <div key={item.filename} className="news-card">
-                <img src={item.thumb} alt={item.title} className="news-img" loading="lazy" />
+                <img 
+                  src={item.images && item.images.length > 0 ? item.images[0] : item.thumb} 
+                  alt={item.title} 
+                  className="news-img" 
+                  loading="lazy" 
+                />
                 <div className="news-content">
                   <div className="news-date">{item.tanggalCantik}</div>
                   <h3 className="news-title">{item.title}</h3>
@@ -198,6 +205,7 @@ export default function ClientPage({ berita, settings }) {
           </div>
         </section>
 
+        {/* 🔥 KONTAK SOSMED (YouTube dipaksa muncul) */}
         <section id="kontak" className="section-card glass" style={{ marginBottom: '1rem' }}>
           <h2 className="section-title">Hubungi Kami</h2>
           <div className="kontak-wrapper">
@@ -213,29 +221,29 @@ export default function ClientPage({ berita, settings }) {
               <i className="fa-brands fa-instagram"></i><p>Instagram</p>
               <a href={`https://instagram.com/${settings?.ig || 'smpn1damai'}`} target="_blank" rel="noopener noreferrer">@{settings?.ig || 'smpn1damai'}</a>
             </div>
-            {settings?.fb && (
-              <div className="kontak-item">
-                <i className="fa-brands fa-facebook" style={{color:'#3b82f6'}}></i><p>Facebook</p>
-                <a href={settings.fb} target="_blank" rel="noopener noreferrer">Kunjungi Halaman</a>
-              </div>
-            )}
-            {settings?.yt && (
-              <div className="kontak-item">
-                <i className="fa-brands fa-youtube" style={{color:'#ef4444'}}></i><p>YouTube</p>
-                <a href={settings.yt} target="_blank" rel="noopener noreferrer">SMP Negeri 1 Damai</a>
-              </div>
-            )}
+            <div className="kontak-item">
+              <i className="fa-brands fa-facebook" style={{color:'#3b82f6'}}></i><p>Facebook</p>
+              <a href={settings?.fb || '#'} target="_blank" rel="noopener noreferrer">Kunjungi Halaman</a>
+            </div>
+            <div className="kontak-item">
+              <i className="fa-brands fa-youtube" style={{color:'#ef4444'}}></i><p>YouTube</p>
+              <a href={settings?.yt || 'https://youtube.com'} target="_blank" rel="noopener noreferrer">SMP Negeri 1 Damai</a>
+            </div>
           </div>
         </section>
       </div>
 
-      <footer>&copy; 2026 | Admin Web : Nur Alfi Syahri, S.P.</footer>
+      <footer>© 2026 | Admin Web : Nur Alfi Syahri, S.P.</footer>
 
       {activeModal && (
         <div id="modal-berita-next" onClick={tutupModal}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <div className="close-btn" onClick={tutupModal}>&times;</div>
-            <img src={activeModal.thumb} alt={activeModal.title} className="modal-img" />
+            <div className="close-btn" onClick={tutupModal}>×</div>
+            <img 
+              src={activeModal.images && activeModal.images.length > 0 ? activeModal.images[0] : activeModal.thumb} 
+              alt={activeModal.title} 
+              className="modal-img" 
+            />
             <div className="modal-body">
               <h2>{activeModal.title}</h2>
               <div className="meta" style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
