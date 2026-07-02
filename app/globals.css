@@ -180,6 +180,6 @@ footer { text-align: center; padding: 20px; font-weight: 600; color: #64748b; }
 .result-type { font-size: 0.75rem; background: #e0f2fe; color: #0284c7; padding: 4px 10px; border-radius: 12px; font-weight: bold; display: inline-block; margin-bottom: 8px; }
 /* ================= PERBAIKAN JARAK SCROLL MENU ================= */
 .section-card {
-    scroll-margin-top: 5px !important; /* Ngatur rem biar pas di bawah navbar langsing */
+    scroll-margin-top: -25px !important; /* Ngatur rem biar pas di bawah navbar langsing */
 }
 
