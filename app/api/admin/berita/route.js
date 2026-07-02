@@ -2,7 +2,6 @@ import { NextResponse } from 'next/server';
 
 const OWNER = 'perpussemangatpagi';
 const REPO = 'smpn1damai-nextjs';
-const TOKEN = process.env.GITHUB_TOKEN;
 
 // Fungsi pembantu untuk cek kecocokan login admin
 function cekAutentikasi(username, password) {
@@ -12,6 +11,7 @@ function cekAutentikasi(username, password) {
 // 1. TAMBAH & EDIT BERITA (POST)
 export async function POST(request) {
   try {
+    const TOKEN = process.env.GITHUB_TOKEN;
     const data = await request.json();
     const { username, password, filename, title, thumb, body, isEdit } = data;
 
@@ -23,7 +23,6 @@ export async function POST(request) {
     const pathFile = `content/berita/${filename}.json`;
     const urlGithub = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${pathFile}`;
 
-    // 🔥 INI DIA YANG UDAH DIBENERIN (Tadi pakai spasi wkwkwk)
     const hariIni = new Date();
     const tanggalCantik = hariIni.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
 
@@ -38,7 +37,6 @@ export async function POST(request) {
       body
     };
 
-    // Cari tahu apakah file sudah ada di github (buat dapetin SHA kalau mode Edit)
     let sha = null;
     const cekFile = await fetch(urlGithub, {
       headers: { 'Authorization': `Bearer ${TOKEN}`, 'Accept': 'application/vnd.github.v3+json' }
@@ -48,7 +46,6 @@ export async function POST(request) {
       sha = infoFile.sha;
     }
 
-    // Kirim atau timpa data ke GitHub
     const responGithub = await fetch(urlGithub, {
       method: 'PUT',
       headers: {
@@ -74,6 +71,7 @@ export async function POST(request) {
 // 2. HAPUS BERITA (DELETE)
 export async function DELETE(request) {
   try {
+    const TOKEN = process.env.GITHUB_TOKEN;
     const data = await request.json();
     const { username, password, filename } = data;
 
@@ -84,14 +82,12 @@ export async function DELETE(request) {
     const pathFile = `content/berita/${filename}`;
     const urlGithub = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${pathFile}`;
 
-    // Ambil SHA file dulu sebelum dihapus
     const cekFile = await fetch(urlGithub, {
       headers: { 'Authorization': `Bearer ${TOKEN}`, 'Accept': 'application/vnd.github.v3+json' }
     });
     if (!cekFile.ok) return NextResponse.json({ error: 'File berita tidak ditemukan di GitHub!' }, { status: 404 });
     const infoFile = await cekFile.json();
 
-    // Eksekusi hapus file di repo
     const hapusFile = await fetch(urlGithub, {
       method: 'DELETE',
       headers: {
