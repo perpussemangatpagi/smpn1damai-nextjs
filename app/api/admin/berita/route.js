@@ -23,8 +23,8 @@ export async function POST(request) {
     const pathFile = `content/berita/${filename}.json`;
     const urlGithub = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${pathFile}`;
 
-    // Ambil tanggal hari ini otomatis buat berita baru
-    const hari Ini = new Date();
+    // 🔥 INI DIA YANG UDAH DIBENERIN (Tadi pakai spasi wkwkwk)
+    const hariIni = new Date();
     const tanggalCantik = hariIni.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
 
     // Racikan isi data berita yang disimpan (Penulis diambil otomatis dari Vercel Env)
@@ -111,4 +111,4 @@ export async function DELETE(request) {
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
-      }
+}
