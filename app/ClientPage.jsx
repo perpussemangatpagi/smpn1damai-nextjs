@@ -148,7 +148,6 @@ export default function ClientPage({ berita, settings }) {
       </div>
 
       <div className="container">
-        {/* 🔥 LOGIC BACA FOTO PERTAMA DARI ARRAY */}
         <section id="beranda" className="section-card glass">
           <h2 className="section-title">Berita & Informasi Terbaru</h2>
           <div className="news-grid">
@@ -205,7 +204,6 @@ export default function ClientPage({ berita, settings }) {
           </div>
         </section>
 
-        {/* 🔥 KONTAK SOSMED (YouTube dipaksa muncul) */}
         <section id="kontak" className="section-card glass" style={{ marginBottom: '1rem' }}>
           <h2 className="section-title">Hubungi Kami</h2>
           <div className="kontak-wrapper">
@@ -239,11 +237,30 @@ export default function ClientPage({ berita, settings }) {
         <div id="modal-berita-next" onClick={tutupModal}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="close-btn" onClick={tutupModal}>×</div>
-            <img 
-              src={activeModal.images && activeModal.images.length > 0 ? activeModal.images[0] : activeModal.thumb} 
-              alt={activeModal.title} 
-              className="modal-img" 
-            />
+            
+            {/* 🔥 INI BAGIAN SLIDER GALLERY-NYA BRE 🔥 */}
+            <div className="modal-gallery" style={{ display: 'flex', overflowX: 'auto', gap: '10px', scrollSnapType: 'x mandatory', paddingBottom: '10px' }}>
+              {activeModal.images && activeModal.images.length > 0 ? (
+                activeModal.images.map((imgUrl, index) => (
+                  <img 
+                    key={index} 
+                    src={imgUrl} 
+                    alt={`Foto ${index + 1} - ${activeModal.title}`} 
+                    className="modal-img" 
+                    style={{ flex: '0 0 100%', scrollSnapAlign: 'start', objectFit: 'cover', borderRadius: '12px' }} 
+                  />
+                ))
+              ) : (
+                <img 
+                  src={activeModal.thumb} 
+                  alt={activeModal.title} 
+                  className="modal-img" 
+                  style={{ width: '100%', borderRadius: '12px', objectFit: 'cover' }} 
+                />
+              )}
+            </div>
+            {/* ======================================= */}
+
             <div className="modal-body">
               <h2>{activeModal.title}</h2>
               <div className="meta" style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
