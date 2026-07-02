@@ -1,4 +1,3 @@
-// Pancing Vercel subuh-subuh biar bangun
 import { NextResponse } from 'next/server';
 
 const OWNER = 'perpussemangatpagi';
@@ -10,8 +9,10 @@ function cekAutentikasi(username, password) {
 
 export async function POST(request) {
   try {
-    const TOKEN = process.env.GITHUB_TOKEN;
-    const { username, password, filename, title, body, isEdit, newImages, oldThumb } = await request.json();
+    const TOKEN = process.env.GITHUB_TOKEN || process.env.GITHUB_PAT;
+    
+    // 🔥 Ambil tanggalCantik dari paket kiriman form Admin
+    const { username, password, filename, title, body, isEdit, newImages, oldThumb, tanggalCantik } = await request.json();
 
     if (!cekAutentikasi(username, password)) {
       return NextResponse.json({ error: 'Username atau Password Salah!' }, { status: 401 });
@@ -19,10 +20,9 @@ export async function POST(request) {
 
     let uploadedUrls = [];
 
-    // 🔥 LOOP UPLOAD GAMBAR BARU KE GITHUB
     if (newImages && newImages.length > 0) {
       for (let file of newImages) {
-        const cleanName = file.name.replace(/[^a-zA-Z0-9.]/g, ''); // Bersihin nama file dari spasi
+        const cleanName = file.name.replace(/[^a-zA-Z0-9.]/g, ''); 
         const imgPath = `content/gambar/${Date.now()}-${cleanName}`;
         const urlGithubImg = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${imgPath}`;
 
@@ -39,12 +39,10 @@ export async function POST(request) {
         });
 
         if (resImg.ok) {
-           // Kalau sukses, ambil link raw-nya
            uploadedUrls.push(`https://raw.githubusercontent.com/${OWNER}/${REPO}/main/${imgPath}`);
         }
       }
     } else if (oldThumb) {
-      // Kalau mode edit tapi ga ada foto baru diupload, pakai foto lama
       uploadedUrls = oldThumb.split(',').map(url => url.trim());
     }
 
@@ -55,7 +53,7 @@ export async function POST(request) {
       title,
       thumb: mainThumb,
       images: uploadedUrls,
-      tanggalCantik: new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }),
+      tanggalCantik: tanggalCantik || 'Tanggal tidak diketahui', // 🔥 Tanggal resmi dimasukkan ke database
       author: process.env.AUTHOR_NAME || 'Admin Sekolah',
       snippetBersih: body.substring(0, 100) + '...',
       body
@@ -88,7 +86,7 @@ export async function POST(request) {
 // 2. HAPUS BERITA (DELETE)
 export async function DELETE(request) {
   try {
-    const TOKEN = process.env.GITHUB_TOKEN;
+    const TOKEN = process.env.GITHUB_TOKEN || process.env.GITHUB_PAT;
     const { username, password, filename } = await request.json();
 
     if (!cekAutentikasi(username, password)) {
