@@ -227,7 +227,7 @@ export default function ClientPage({ berita, settings }) {
             </div>
             <div className="kontak-item">
               <i className="fa-brands fa-youtube" style={{color:'#ef4444'}}></i><p>YouTube</p>
-              <a href={settings?.yt || 'https://youtube.com'} target="_blank" rel="noopener noreferrer">SMP Negeri 1 Damai</a>
+              <a href={settings?.yt || 'https://youtube.com/@smpnegeri1damai-lq2lr'} target="_blank" rel="noopener noreferrer">SMP Negeri 1 Damai</a>
             </div>
           </div>
         </section>
