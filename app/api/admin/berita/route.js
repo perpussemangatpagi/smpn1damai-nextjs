@@ -1,3 +1,4 @@
+// Pancing Vercel subuh-subuh biar bangun
 import { NextResponse } from 'next/server';
 
 const OWNER = 'perpussemangatpagi';
