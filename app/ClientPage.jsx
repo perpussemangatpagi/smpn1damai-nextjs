@@ -7,7 +7,6 @@ export default function ClientPage({ berita, settings }) {
   const [showLeftArrow, setShowLeftArrow] = useState(false);
   const [showRightArrow, setShowRightArrow] = useState(true);
   
-  // 🔥 STATE UNTUK FITUR SEARCH
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [query, setQuery] = useState('');
 
@@ -60,7 +59,6 @@ export default function ClientPage({ berita, settings }) {
     }
   };
 
-  // 🔥 GUDANG DATA PENCARIAN RAKSASA
   const semuaData = [
     ...berita.map(b => ({ tipe: 'Berita', judul: b.title, link: b, konten: b.snippetBersih })),
     { tipe: 'Halaman', judul: 'Profil Sekolah', link: '#profil', konten: settings?.profil || 'Membentuk generasi unggul' },
@@ -74,17 +72,14 @@ export default function ClientPage({ berita, settings }) {
     { tipe: 'Sosial Media', judul: 'YouTube SMPN 1 Damai', link: settings?.yt || '#kontak', konten: 'Video dokumentasi kegiatan sekolah' }
   ];
 
-  // Rumus Filter Pencarian
   const hasilCari = query.length > 1 ? semuaData.filter(item => 
     item.judul.toLowerCase().includes(query.toLowerCase()) || 
     item.konten.toLowerCase().includes(query.toLowerCase())
   ) : [];
 
-  // Aksi ketika hasil pencarian di klik
   const klikHasil = (item) => {
     setIsSearchOpen(false); document.body.style.overflow = 'auto';
     setQuery('');
-    
     if (item.tipe === 'Berita') {
       bukaModal(item.link);
     } else if (typeof item.link === 'string' && item.link.startsWith('http')) {
@@ -99,30 +94,31 @@ export default function ClientPage({ berita, settings }) {
 
   return (
     <>
-      <header className="header-container glass">
-                <div className="nav-brand" style={{ display: 'flex', width: '100%', alignItems: 'center', gap: '12px' }}>
-            <img src="/logo_sekolah (1).png" alt="Logo SMPN 1 Damai" style={{ margin: 0 }} />
-            
-            <div className="title" style={{ whiteSpace: 'nowrap', fontSize: '1.15rem', margin: 0 }}>SMPN 1 Damai</div>
-            
-            {/* 🔥 Tombol Pencarian dengan jarak proporsional (margin di-reset jadi 0) */}
-            <button className="search-trigger" onClick={bukaSearch} style={{ margin: 0 }}>
+      {/* 🔥 INI DIA NAVBAR YANG UDAH DIKASIH OBAT PELANGSING (Padding & Height dipangkas) */}
+      <header className="header-container glass" style={{ padding: '12px 16px', gap: '6px', borderRadius: '24px' }}>
+        <div className="nav-brand" style={{ display: 'flex', width: '100%', alignItems: 'center', gap: '10px' }}>
+            <img src="/logo_sekolah (1).png" alt="Logo SMPN 1 Damai" style={{ margin: 0, height: '36px', width: 'auto' }} />
+            <div className="title" style={{ whiteSpace: 'nowrap', fontSize: '1.1rem', margin: 0, fontWeight: '800' }}>SMPN 1 Damai</div>
+            <button className="search-trigger" onClick={bukaSearch} style={{ margin: 0, padding: '6px 12px', fontSize: '0.85rem', height: '36px' }}>
                 <i className="fa-solid fa-magnifying-glass"></i> <span>Cari</span>
             </button>
         </div>
-
-        <div className="nav-wrapper">
+        <div className="nav-wrapper" style={{ marginTop: '2px' }}>
             <button className="nav-arrow left" style={{ display: showLeftArrow ? 'flex' : 'none' }} onClick={() => scrollNav(-100)}><i className="fa-solid fa-chevron-left"></i></button>
             <nav>
-                <ul ref={navListRef}>
-                    <li><a href="#beranda">Beranda</a></li><li><a href="#profil">Profil</a></li><li><a href="#visimisi">Visi & Misi</a></li><li><a href="#struktur">Struktur</a></li><li><a href="#layanan">Web Lainnya</a></li><li><a href="#kontak">Kontak</a></li>
+                <ul ref={navListRef} style={{ gap: '16px', display: 'flex', alignItems: 'center', margin: 0, padding: 0 }}>
+                    <li><a href="#beranda" style={{ padding: '4px 0', fontSize: '0.9rem' }}>Beranda</a></li>
+                    <li><a href="#profil" style={{ padding: '4px 0', fontSize: '0.9rem' }}>Profil</a></li>
+                    <li><a href="#visimisi" style={{ padding: '4px 0', fontSize: '0.9rem' }}>Visi & Misi</a></li>
+                    <li><a href="#struktur" style={{ padding: '4px 0', fontSize: '0.9rem' }}>Struktur</a></li>
+                    <li><a href="#layanan" style={{ padding: '4px 0', fontSize: '0.9rem' }}>Web Lainnya</a></li>
+                    <li><a href="#kontak" style={{ padding: '4px 0', fontSize: '0.9rem' }}>Kontak</a></li>
                 </ul>
             </nav>
             <button className="nav-arrow right" style={{ display: showRightArrow ? 'flex' : 'none' }} onClick={() => scrollNav(100)}><i className="fa-solid fa-chevron-right"></i></button>
         </div>
       </header>
 
-      {/* 🔥 LAYAR MODAL PENCARIAN FULL SCREEN */}
       {isSearchOpen && (
         <div className="search-modal">
             <div className="search-header-box">
@@ -202,7 +198,6 @@ export default function ClientPage({ berita, settings }) {
           </div>
         </section>
 
-        {/* 🔥 KARTU KONTAK */}
         <section id="kontak" className="section-card glass" style={{ marginBottom: '1rem' }}>
           <h2 className="section-title">Hubungi Kami</h2>
           <div className="kontak-wrapper">
